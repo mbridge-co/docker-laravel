@@ -31,6 +31,8 @@ RUN apt-get update \
     pdo_mysql \
     zip \
     bcmath \
+  && pecl install grpc \
+  && docker-php-ext-enable grpc \
   && composer config -g process-timeout 3600 \
   && composer config -g repos.packagist composer https://packagist.org
 

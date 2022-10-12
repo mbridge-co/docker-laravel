@@ -45,31 +45,31 @@ services:
         source: ./src
         target: /workspace
 
-  db:
-    build:
-      context: .
-      dockerfile: ./infra/docker/mysql/Dockerfile
-    ports:
-      - target: 3306
-        published: ${DB_PUBLISHED_PORT:-3306}
-        protocol: tcp
-        mode: host
-    volumes:
-      - type: volume
-        source: db-store
-        target: /var/lib/mysql
-        volume:
-          nocopy: true
-    environment:
-      - MYSQL_DATABASE=${DB_DATABASE:-laravel}
-      - MYSQL_USER=${DB_USERNAME:-phper}
-      - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
+  # db:
+  #   build:
+  #     context: .
+  #     dockerfile: ./infra/docker/mysql/Dockerfile
+  #   ports:
+  #     - target: 3306
+  #       published: ${DB_PUBLISHED_PORT:-3306}
+  #       protocol: tcp
+  #       mode: host
+  #   volumes:
+  #     - type: volume
+  #       source: db-store
+  #       target: /var/lib/mysql
+  #       volume:
+  #         nocopy: true
+  #   environment:
+  #     - MYSQL_DATABASE=${DB_DATABASE:-laravel}
+  #     - MYSQL_USER=${DB_USERNAME:-phper}
+  #     - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
+  #     - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
 
-  mailhog:
-    image: mailhog/mailhog
-    ports:
-      - target: 8025
-        published: ${MAILHOG_PUBLISHED_PORT:-8025}
-        protocol: tcp
-        mode: host
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   ports:
+  #     - target: 8025
+  #       published: ${MAILHOG_PUBLISHED_PORT:-8025}
+  #       protocol: tcp
+  #       mode: host
