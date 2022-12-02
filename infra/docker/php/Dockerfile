@@ -22,6 +22,8 @@ RUN apt-get update \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    libpng-dev \
+    zlib1g-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
@@ -31,6 +33,8 @@ RUN apt-get update \
     pdo_mysql \
     zip \
     bcmath \
+    mbstring \
+    gd \
   && composer config -g process-timeout 3600 \
   && composer config -g repos.packagist composer https://packagist.org
 
