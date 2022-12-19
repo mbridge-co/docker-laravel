@@ -22,7 +22,7 @@
 /.git
 /.idea
 /.vscode
-**.env*
+**.env
 **.editorconfig
 **.gitattributes
 **.gitignore

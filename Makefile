@@ -105,3 +105,29 @@ ide-helper:
 	docker compose exec app php artisan ide-helper:generate
 	docker compose exec app php artisan ide-helper:meta
 	docker compose exec app php artisan ide-helper:models --nowrite
+aws-uat:
+	@make aws-login
+	@make aws-build
+	@make aws-tag-uat
+	@make aws-push-uat
+aws-trial:
+	@make aws-login
+	@make aws-tag-trial
+	@make aws-push-trial
+aws-login:
+	aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com
+aws-build:
+	docker build --platform amd64 -t yappli-fj2-senior-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile .
+	docker build --platform amd64 -t yappli-fj2-senior-ecs/laravel:latest --target deploy -f ./infra/docker/php/Dockerfile .
+aws-tag-uat:
+	docker tag yappli-fj2-senior-ecs/nginx:latest 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-ecs/nginx:latest
+	docker tag yappli-fj2-senior-ecs/laravel:latest 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-ecs/laravel:latest
+aws-push-uat:
+	docker push 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-ecs/nginx:latest --disable-content-trust=true
+	docker push 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-ecs/laravel:latest --disable-content-trust=true
+aws-tag-trial:
+	docker tag yappli-fj2-senior-ecs/nginx:latest 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-trial-ecs/nginx:latest
+	docker tag yappli-fj2-senior-ecs/laravel:latest 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-trial-ecs/laravel:latest
+aws-push-trial:
+	docker push 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-trial-ecs/nginx:latest --disable-content-trust=true
+	docker push 571180274998.dkr.ecr.ap-northeast-1.amazonaws.com/fujitsu-trial-ecs/laravel:latest --disable-content-trust=true
