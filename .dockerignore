@@ -1,6 +1,7 @@
 /src/node_modules
 /src/public/hot
 /src/public/storage
+/src/bootstrap/cache/*
 /src/storage/app/*
 /src/storage/framework/cache/data/*
 /src/storage/framework/sessions/*
@@ -22,7 +23,7 @@
 /.git
 /.idea
 /.vscode
-**.env*
+**.env
 **.editorconfig
 **.gitattributes
 **.gitignore

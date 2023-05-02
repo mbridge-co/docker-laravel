@@ -22,6 +22,8 @@ RUN apt-get update \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    libmemcached-tools \
+    libmemcached-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
@@ -31,6 +33,8 @@ RUN apt-get update \
     pdo_mysql \
     zip \
     bcmath \
+  && pecl install memcached \
+  && docker-php-ext-enable memcached \
   && composer config -g process-timeout 3600 \
   && composer config -g repos.packagist composer https://packagist.org
 
@@ -50,7 +54,9 @@ FROM base AS deploy
 COPY ./infra/docker/php/php.deploy.ini /usr/local/etc/php/php.ini
 COPY ./src /workspace
 
+ARG APP_ENV
+
 RUN composer install -q -n --no-ansi --no-dev --no-scripts --no-progress --prefer-dist \
   && chmod -R 777 storage bootstrap/cache \
   && php artisan optimize:clear \
-  && php artisan optimize
+  && php artisan optimize --env=$APP_ENV

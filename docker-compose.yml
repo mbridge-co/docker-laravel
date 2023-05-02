@@ -35,6 +35,7 @@ services:
     build:
       context: .
       dockerfile: ./infra/docker/nginx/Dockerfile
+      target: ${APP_BUILD_TARGET:-development}
     ports:
       - target: 80
         published: ${WEB_PUBLISHED_PORT:-80}
