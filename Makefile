@@ -87,7 +87,7 @@ ide-helper:
 	docker compose exec app php artisan ide-helper:meta
 	docker compose exec app php artisan ide-helper:models --nowrite
 aws-login:
-	aws ecr get-login-password --region ap-northeast-1 -profile yappli | docker login --username AWS --password-stdin 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com
+	aws ecr get-login-password --region ap-northeast-1 --profile yappli | docker login --username AWS --password-stdin 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com
 aws-build-staging:
 	docker build --platform amd64 -t marugame-stg-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=staging .
 	docker build --platform amd64 -t marugame-stg-ecs/php:latest --target deploy -f ./infra/docker/php/Dockerfile --build-arg APP_ENV=staging .
