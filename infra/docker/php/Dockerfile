@@ -14,6 +14,9 @@ ENV TZ=UTC \
 
 COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
 
+RUN mkdir -p /usr/src/php/ext/imagick; \
+  curl -fsSL https://github.com/Imagick/imagick/archive/refs/tags/3.7.0.tar.gz | tar xvz -C "/usr/src/php/ext/imagick" --strip 1;
+
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
     locales \
@@ -24,8 +27,11 @@ RUN apt-get update \
     libonig-dev \
     libmemcached-tools \
     libmemcached-dev \
+    libpng-dev \
+    libmagickwand-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
+  && rm /etc/ImageMagick-6/policy.xml \
   && locale-gen en_US.UTF-8 \
   && localedef -f UTF-8 -i en_US en_US.UTF-8 \
   && docker-php-ext-install \
@@ -33,6 +39,8 @@ RUN apt-get update \
     pdo_mysql \
     zip \
     bcmath \
+    gd \
+    imagick \
   && pecl install memcached \
   && docker-php-ext-enable memcached \
   && composer config -g process-timeout 3600 \
