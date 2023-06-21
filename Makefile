@@ -14,6 +14,14 @@ build:
 remake:
 	@make destroy
 	@make install
+remake-web:
+	docker-compose stop web
+	docker-compose rm web
+	docker-compose up --no-deps --build -d
+remake-app:
+	docker-compose stop app
+	docker-compose rm app
+	docker-compose up --no-deps --build -d
 stop:
 	docker compose stop
 down:
@@ -86,18 +94,39 @@ ide-helper:
 	docker compose exec app php artisan ide-helper:generate
 	docker compose exec app php artisan ide-helper:meta
 	docker compose exec app php artisan ide-helper:models --nowrite
+aws-ssm:
+	aws ssm start-session --target i-02db00b939b95c364
 aws-login:
-	aws ecr get-login-password --region ap-northeast-1 --profile yappli | docker login --username AWS --password-stdin 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com
+	aws ecr get-login-password | docker login --username AWS --password-stdin 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com
 aws-build-staging:
-	docker build --platform amd64 -t marugame-stg-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=staging .
-	docker build --platform amd64 -t marugame-stg-ecs/php:latest --target deploy -f ./infra/docker/php/Dockerfile --build-arg APP_ENV=staging .
+	docker build --platform linux/amd64 -t marugame-stg-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=staging .
+	docker build --platform linux/amd64 -t marugame-stg-ecs/php:latest --target deploy -f ./infra/docker/php/Dockerfile --build-arg APP_ENV=staging .
 aws-tag-staging:
 	docker tag marugame-stg-ecs/nginx:latest 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-stg-ecs/nginx:latest
 	docker tag marugame-stg-ecs/php:latest 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-stg-ecs/php:latest
 aws-push-staging:
 	docker push 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-stg-ecs/nginx:latest --disable-content-trust=true
 	docker push 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-stg-ecs/php:latest --disable-content-trust=true
+aws-register-task-definition-staging:
+	aws ecs register-task-definition --family marugame-stg-ecs --cli-input-json "$(aws ecs describe-task-definition --task-definition marugame-stg-ecs | jq '.taskDefinition | { containerDefinitions: .containerDefinitions }')"
+aws-update-service-staging:
+	aws ecs update-service --cluster marugame-stg-ecs/marugame-stg-ecs --service marugame-stg-ecs --task-definition marugame-stg-ecs
+aws-build-production:
+	docker build --platform linux/amd64 -t marugame-prod-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=production .
+	docker build --platform linux/amd64 -t marugame-prod-ecs/php:latest --target deploy -f ./infra/docker/php/Dockerfile --build-arg APP_ENV=production .
+aws-tag-production:
+	docker tag marugame-prod-ecs/nginx:latest 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-prod-ecs/nginx:latest
+	docker tag marugame-prod-ecs/php:latest 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-prod-ecs/php:latest
+aws-push-production:
+	docker push 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-prod-ecs/nginx:latest --disable-content-trust=true
+	docker push 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com/marugame-prod-ecs/php:latest --disable-content-trust=true
 aws-staging:
 	@make aws-build-staging
 	@make aws-tag-staging
 	@make aws-push-staging
+	# @make aws-register-task-definition-staging
+	# @make aws-update-service-staging
+aws-production:
+	@make aws-build-production
+	@make aws-tag-production
+	@make aws-push-production
