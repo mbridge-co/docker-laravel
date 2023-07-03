@@ -96,7 +96,7 @@ ide-helper:
 	docker compose exec app php artisan ide-helper:models --nowrite
 aws-ssm:
 	aws ssm start-session --target i-02db00b939b95c364
-aws-login:
+aws-ecs-login:
 	aws ecr get-login-password | docker login --username AWS --password-stdin 127531411257.dkr.ecr.ap-northeast-1.amazonaws.com
 aws-build-staging:
 	docker build --platform linux/amd64 -t marugame-stg-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=staging .
