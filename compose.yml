@@ -1,7 +1,11 @@
-version: "3.9"
 volumes:
   db-store:
   psysh-store:
+
+configs:
+  db-config:
+    file: ./infra/docker/mysql/my.cnf
+
 services:
   app:
     build:
@@ -19,7 +23,6 @@ services:
           nocopy: true
     environment:
       - APP_DEBUG=${APP_DEBUG:-true}
-      - APP_KEY=${APP_KEY:-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX}
       - APP_ENV=${APP_ENV:-local}
       - APP_URL=${APP_URL:-http://localhost}
       - LOG_CHANNEL=${LOG_CHANNEL:-stderr}
@@ -54,6 +57,9 @@ services:
         published: ${DB_PUBLISHED_PORT:-3306}
         protocol: tcp
         mode: host
+    configs:
+      - source: db-config
+        target: /etc/my.cnf
     volumes:
       - type: volume
         source: db-store
@@ -66,10 +72,10 @@ services:
       - MYSQL_PASSWORD=${DB_PASSWORD:-secret}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-secret}
 
-  mailhog:
-    image: mailhog/mailhog
+  mailpit:
+    image: axllent/mailpit
     ports:
       - target: 8025
-        published: ${MAILHOG_PUBLISHED_PORT:-8025}
+        published: ${MAILPIT_PUBLISHED_PORT:-8025}
         protocol: tcp
         mode: host

@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-bullseye AS base
+FROM php:8.2-fpm-bullseye AS base
 
 WORKDIR /workspace
 
@@ -12,7 +12,7 @@ ENV TZ=UTC \
   COMPOSER_ALLOW_SUPERUSER=1 \
   COMPOSER_HOME=/composer
 
-COPY --from=composer:2.4 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update \
   && apt-get -y install --no-install-recommends \
