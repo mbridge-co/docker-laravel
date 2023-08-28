@@ -22,13 +22,14 @@ RUN apt-get update \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    libpq-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
   && localedef -f UTF-8 -i en_US en_US.UTF-8 \
   && docker-php-ext-install \
     intl \
-    pdo_mysql \
+    pdo_pgsql pgsql \
     zip \
     bcmath \
   && composer config -g process-timeout 3600 \

@@ -15,7 +15,7 @@ create-project:
 	docker compose exec app php artisan key:generate
 	docker compose exec app php artisan storage:link
 	docker compose exec app chmod -R 777 storage bootstrap/cache
-	@make fresh
+	#@make fresh
 up:
 	docker compose up -d
 build:
@@ -87,7 +87,7 @@ cache-clear:
 db:
 	docker compose exec db bash
 sql:
-	docker compose exec db bash -c 'mysql -u $$MYSQL_USER -p$$MYSQL_PASSWORD $$MYSQL_DATABASE'
+	docker compose exec db bash -c 'psql -U $$POSTGRES_USER -W $$POSTGRES_PASSWORD -d $$POSTGRES_DB'
 redis:
 	docker compose exec redis redis-cli
 ide-helper:
