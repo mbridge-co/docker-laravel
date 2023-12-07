@@ -25,8 +25,8 @@ RUN apt-get update \
     libzip-dev \
     libicu-dev \
     libonig-dev \
-    libmemcached-tools \
-    libmemcached-dev \
+    # libmemcached-tools \
+    # libmemcached-dev \
     libpng-dev \
     libmagickwand-dev \
   && apt-get clean \
@@ -41,8 +41,10 @@ RUN apt-get update \
     bcmath \
     gd \
     imagick \
-  && pecl install memcached \
-  && docker-php-ext-enable memcached \
+  # && pecl install memcached \
+  # && docker-php-ext-enable memcached \
+  && pecl install redis \
+  && docker-php-ext-enable redis \
   && composer config -g process-timeout 3600 \
   && composer config -g repos.packagist composer https://packagist.org
 
@@ -67,6 +69,7 @@ COPY ./src /workspace
 ARG APP_ENV
 
 RUN composer install -q -n -o --no-ansi --no-dev --no-scripts --no-progress --prefer-dist \
-  && chmod -R 777 storage bootstrap/cache \
-  && php artisan optimize:clear \
-  && php artisan optimize --env=$APP_ENV
+  && chmod -R 777 storage bootstrap/cache
+  # Redis対応の影響でエラーが発生する
+  # && php artisan optimize:clear \
+  # && php artisan optimize --env=$APP_ENV
