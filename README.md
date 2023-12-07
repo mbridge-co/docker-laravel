@@ -22,6 +22,14 @@ Build a simple laravel development environment with docker-compose. Compatible w
 3. Execute the following command
 
 ```bash
+$ task create-project
+
+# or...
+
+$ make create-project
+
+# or...
+
 $ mkdir -p src
 $ docker compose build
 $ docker compose up -d
@@ -40,13 +48,29 @@ http://localhost
 2. Execute the following command
 
 ```bash
+# https://taskfile.dev
+$ task install
+
+# or...
+
 $ make install
+
+# or...
+
+$ docker compose build
+$ docker compose up -d
+$ docker compose exec app composer install
+$ docker compose exec app cp .env.example .env
+$ docker compose exec app php artisan key:generate
+$ docker compose exec app php artisan storage:link
+$ docker compose exec app chmod -R 777 storage bootstrap/cache
 ```
 
 http://localhost
 
 ## Tips
 
+- Read this [Taskfile](https://github.com/ucan-lab/docker-laravel/blob/main/Taskfile.yml).
 - Read this [Makefile](https://github.com/ucan-lab/docker-laravel/blob/main/Makefile).
 - Read this [Wiki](https://github.com/ucan-lab/docker-laravel/wiki).
 
@@ -61,20 +85,20 @@ http://localhost
 ### app container
 
 - Base image
-  - [php](https://hub.docker.com/_/php):8.1-fpm-bullseye
-  - [composer](https://hub.docker.com/_/composer):2.2
+  - [php](https://hub.docker.com/_/php):8.3-fpm-bullseye
+  - [composer](https://hub.docker.com/_/composer):2.6
 
 ### web container
 
 - Base image
-  - [nginx](https://hub.docker.com/_/nginx):1.22
+  - [nginx](https://hub.docker.com/_/nginx):1.25
 
 ### db container
 
 - Base image
   - [mysql/mysql-server](https://hub.docker.com/r/mysql/mysql-server):8.0
 
-### mailhog container
+### mailpit container
 
 - Base image
-  - [mailhog/mailhog](https://hub.docker.com/r/mailhog/mailhog)
+  - [axllent/mailpit](https://hub.docker.com/r/axllent/mailpit)

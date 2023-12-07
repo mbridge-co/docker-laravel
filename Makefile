@@ -7,13 +7,19 @@ install:
 	docker compose exec app php artisan storage:link
 	docker compose exec app chmod -R 777 storage bootstrap/cache
 	@make fresh
-up:
+create-project:
+	mkdir -p src
+	docker compose build
 	docker compose up -d
+	docker compose exec app composer create-project --prefer-dist laravel/laravel .
+	docker compose exec app php artisan key:generate
+	docker compose exec app php artisan storage:link
+	docker compose exec app chmod -R 777 storage bootstrap/cache
+	@make fresh
 build:
 	docker compose build
-remake:
-	@make destroy
-	@make install
+up:
+	docker compose up -d
 stop:
 	docker compose stop
 down:
@@ -25,28 +31,21 @@ restart:
 	@make up
 destroy:
 	docker compose down --rmi all --volumes --remove-orphans
+remake:
+	@make destroy
+	@make install
 ps:
 	docker compose ps
-logs:
-	docker compose logs
-logs-watch:
-	docker compose logs --follow
-log-web:
-	docker compose logs web
-log-web-watch:
-	docker compose logs --follow web
-log-app:
-	docker compose logs app
-log-app-watch:
-	docker compose logs --follow app
-log-db:
-	docker compose logs db
-log-db-watch:
-	docker compose logs --follow db
 web:
 	docker compose exec web bash
 app:
 	docker compose exec app bash
+tinker:
+	docker compose exec app php artisan tinker
+dump:
+	docker compose exec app php artisan dump-server
+test:
+	docker compose exec app php artisan test
 migrate:
 	docker compose exec app php artisan migrate
 fresh:
@@ -58,10 +57,6 @@ dacapo:
 rollback-test:
 	docker compose exec app php artisan migrate:fresh
 	docker compose exec app php artisan migrate:refresh
-tinker:
-	docker compose exec app php artisan tinker
-test:
-	docker compose exec app php artisan test
 optimize:
 	docker compose exec app php artisan optimize
 optimize-clear:
@@ -75,6 +70,7 @@ cache-clear:
 	docker compose exec app composer clear-cache
 	@make optimize-clear
 	docker compose exec app php artisan event:clear
+	docker compose exec app php artisan view:clear
 db:
 	docker compose exec db bash
 sql:
@@ -86,3 +82,7 @@ ide-helper:
 	docker compose exec app php artisan ide-helper:generate
 	docker compose exec app php artisan ide-helper:meta
 	docker compose exec app php artisan ide-helper:models --nowrite
+pint:
+	docker compose exec app ./vendor/bin/pint -v
+pint-test:
+	docker compose exec app ./vendor/bin/pint -v --test
