@@ -15,7 +15,7 @@ Build a simple laravel development environment with docker-compose. Compatible w
 
 ## Usage
 
-### Laravel install
+### Create an initial Laravel project
 
 1. Click [Use this template](https://github.com/ucan-lab/docker-laravel/generate)
 2. Git clone & change directory
@@ -42,13 +42,12 @@ $ docker compose exec app php artisan migrate
 
 http://localhost
 
-### Laravel setup
+### Create an existing Laravel project
 
 1. Git clone & change directory
 2. Execute the following command
 
 ```bash
-# https://taskfile.dev
 $ task install
 
 # or...
@@ -86,7 +85,7 @@ http://localhost
 
 - Base image
   - [php](https://hub.docker.com/_/php):8.3-fpm-bullseye
-  - [composer](https://hub.docker.com/_/composer):2.6
+  - [composer](https://hub.docker.com/_/composer):2.7
 
 ### web container
 
