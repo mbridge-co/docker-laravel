@@ -105,3 +105,10 @@ ide-helper:
 	docker compose exec app php artisan ide-helper:generate
 	docker compose exec app php artisan ide-helper:meta
 	docker compose exec app php artisan ide-helper:models --nowrite
+
+# AWS
+## Session Manager
+aws-ssm-production:
+	aws ssm start-session --profile default --target i-07eb28326c0b3df02
+aws-ssm-portfowarding-production:
+	aws ssm start-session --profile default --target i-07eb28326c0b3df02 --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["hatsuta-mysql.cluster-c9bpdmjrzxjd.ap-northeast-1.rds.amazonaws.com"],"portNumber":["3306"], "localPortNumber":["3307"]}'
