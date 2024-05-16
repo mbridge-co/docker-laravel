@@ -86,3 +86,13 @@ ide-helper:
 	docker compose exec app php artisan ide-helper:generate
 	docker compose exec app php artisan ide-helper:meta
 	docker compose exec app php artisan ide-helper:models --nowrite
+
+# AWS
+aws-ssm-staging:
+	aws ssm start-session --profile 127531411257_ext01-developer --target i-0d4ca4a57fd596a75
+aws-ssm-production:
+	aws ssm start-session --profile 127531411257_ext01-developer --target i-097e2bbd54a4e83e1
+aws-ssm-portfowarding-staging:
+	aws ssm start-session --profile 127531411257_ext01-developer --target i-0d4ca4a57fd596a75 --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["omron-healthcare-prod-rds-instance-1.cqyirad7xvfl.ap-northeast-1.rds.amazonaws.com"],"portNumber":["3306"], "localPortNumber":["3307"]}'
+aws-ssm-portfowarding-production:
+	aws ssm start-session --profile 127531411257_ext01-developer --target i-097e2bbd54a4e83e1 --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["omron-healthcare-prod-rds-instance-1.cqyirad7xvfl.ap-northeast-1.rds.amazonaws.com"],"portNumber":["3306"], "localPortNumber":["3307"]}'
