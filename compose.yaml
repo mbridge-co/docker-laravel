@@ -39,6 +39,8 @@ services:
       - type: bind
         source: ./src
         target: /workspace
+    depends_on:
+      - app
 
   db:
     build:
