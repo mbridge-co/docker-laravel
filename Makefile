@@ -110,6 +110,6 @@ aws-ssm-staging:
 aws-ssm-production:
 	aws ssm start-session --profile 975768626619_csportalprod-developer --target i-0b169cb691d9740ab
 aws-ssm-portfowarding-staging:
-	aws ssm start-session --profile 235277883553_csportalstg-developer --target i-012bd55a6682a1431 --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["csportalstg-rds-instance-1.c4nlyouzfqnv.ap-northeast-1.rds.amazonaws.com"],"portNumber":["3306"], "localPortNumber":["3307"]}'
+	aws ssm start-session --profile 235277883553_csportalstg-developer --target i-012bd55a6682a1431 --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["csportalstg-80-rds.c4nlyouzfqnv.ap-northeast-1.rds.amazonaws.com"],"portNumber":["3306"], "localPortNumber":["3307"]}'
 aws-ssm-portfowarding-production:
 	aws ssm start-session --profile 975768626619_csportalprod-developer --target i-0b169cb691d9740ab --document-name AWS-StartPortForwardingSessionToRemoteHost --parameters '{"host":["csportalprod-rds-instance-1.cjak4bhminva.ap-northeast-1.rds.amazonaws.com"],"portNumber":["3306"], "localPortNumber":["3307"]}'
