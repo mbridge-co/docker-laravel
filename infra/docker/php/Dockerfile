@@ -27,6 +27,7 @@ RUN apt-get update && \
 FROM base AS development
 
 COPY ./infra/docker/php/php.development.ini /usr/local/etc/php/php.ini
+COPY ./infra/docker/php/www.development.conf /usr/local/etc/php-fpm.d/www.conf
 
 FROM base AS deploy
 
