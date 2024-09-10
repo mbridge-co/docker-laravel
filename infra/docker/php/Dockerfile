@@ -47,6 +47,7 @@ EOF
 
 FROM base AS development
 
+COPY ./infra/docker/php/docker.conf /usr/local/etc/php-fpm.d/docker.conf
 COPY ./infra/docker/php/php.development.ini /usr/local/etc/php/php.ini
 
 USER phper
@@ -69,10 +70,12 @@ COPY --chown=phper:phper ./src /workspace
 
 USER phper
 
+ARG APP_ENV
+
 RUN <<EOF
   composer install --quiet --no-interaction --no-ansi --no-dev --no-scripts --no-progress --prefer-dist
   composer dump-autoload --optimize
   chmod -R 777 storage bootstrap/cache
   php artisan optimize:clear
-  php artisan optimize
+  php artisan optimize --env=$APP_ENV
 EOF
