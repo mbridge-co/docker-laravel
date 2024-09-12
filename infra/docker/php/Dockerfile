@@ -45,9 +45,10 @@ RUN <<EOF
   rm -rf /var/lib/apt/lists/*
 EOF
 
+COPY ./infra/docker/php/docker.conf /usr/local/etc/php-fpm.d/docker.conf
+
 FROM base AS development
 
-COPY ./infra/docker/php/docker.conf /usr/local/etc/php-fpm.d/docker.conf
 COPY ./infra/docker/php/php.development.ini /usr/local/etc/php/php.ini
 
 USER phper
