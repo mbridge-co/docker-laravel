@@ -46,6 +46,8 @@ RUN <<EOF
   rm -rf /var/lib/apt/lists/*
 EOF
 
+COPY ./infra/docker/php/docker.conf /usr/local/etc/php-fpm.d/docker.conf
+
 FROM base AS development
 
 COPY ./infra/docker/php/php.development.ini /usr/local/etc/php/php.ini
@@ -70,10 +72,12 @@ COPY --chown=phper:phper ./src /workspace
 
 USER phper
 
+ARG APP_ENV
+
 RUN <<EOF
   composer install --quiet --no-interaction --no-ansi --no-dev --no-scripts --no-progress --prefer-dist
   composer dump-autoload --optimize
   chmod -R 777 storage bootstrap/cache
   php artisan optimize:clear
-  php artisan optimize
+  php artisan optimize --env=$APP_ENV
 EOF
