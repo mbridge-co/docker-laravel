@@ -114,15 +114,17 @@ aws-staging:
 	# @make aws-register-task-definition-staging
 	# @make aws-update-service-staging
 ### production
+aws-production-login:
+	aws ecr get-login-password --profile 794923683341_operation-administrator | docker login --username AWS --password-stdin 794923683341.dkr.ecr.ap-northeast-1.amazonaws.com
 aws-build-production:
 	docker build --platform linux/amd64 -t crmprod-tawaraya-paseos-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=production .
 	docker build --platform linux/amd64 -t crmprod-tawaraya-paseos-ecs/php:latest --target deploy -f ./infra/docker/php/Dockerfile --build-arg APP_ENV=production .
 aws-tag-production:
-	docker tag crmprod-tawaraya-paseos-ecs/nginx:latest 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/nginx:latest
-	docker tag crmprod-tawaraya-paseos-ecs/php:latest 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/php:latest
+	docker tag crmprod-tawaraya-paseos-ecs/nginx:latest 794923683341.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/nginx:latest
+	docker tag crmprod-tawaraya-paseos-ecs/php:latest 794923683341.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/php:latest
 aws-push-production:
-	docker push 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/nginx:latest --disable-content-trust=true
-	docker push 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/php:latest --disable-content-trust=true
+	docker push 794923683341.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/nginx:latest --disable-content-trust=true
+	docker push 794923683341.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tawaraya-paseos-ecs/php:latest --disable-content-trust=true
 aws-production:
 	@make aws-build-production
 	@make aws-tag-production
