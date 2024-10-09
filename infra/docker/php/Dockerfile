@@ -30,13 +30,13 @@ RUN <<EOF
     default-mysql-client=1.0.7
   locale-gen en_US.UTF-8
   localedef -f UTF-8 -i en_US en_US.UTF-8
+  docker-php-ext-configure gd --with-jpeg
   docker-php-ext-install \
     intl \
     pdo_mysql \
     zip \
     bcmath \
     gd
-  docker-php-ext-configure gd --with-jpeg
   # permission denied bind mount in Linux environment
   groupadd --gid $GID phper
   useradd --uid $UID --gid $GID phper
