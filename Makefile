@@ -89,3 +89,37 @@ pint:
 	docker compose exec app ./vendor/bin/pint --verbose
 pint-test:
 	docker compose exec app ./vendor/bin/pint --verbose --test
+
+### staging
+aws-ecs-login-staging:
+	aws ecr get-login-password --profile 046325697959_operation-administrator | docker login --username AWS --password-stdin 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com
+aws-build-staging:
+	docker build --platform linux/amd64 -t crmstg-tenmaya-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=staging .
+	docker build --platform linux/amd64 -t crmstg-tenmaya-ecs/php:latest --target deploy -f ./infra/docker/php/Dockerfile --build-arg APP_ENV=staging .
+aws-tag-staging:
+	docker tag crmstg-tenmaya-ecs/nginx:latest 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmstg-tenmaya-ecs/nginx:latest
+	docker tag crmstg-tenmaya-ecs/php:latest 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmstg-tenmaya-ecs/php:latest
+aws-push-staging:
+	docker push 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmstg-tenmaya-ecs/nginx:latest --disable-content-trust=true
+	docker push 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmstg-tenmaya-ecs/php:latest --disable-content-trust=true
+aws-staging:
+	@make aws-build-staging
+	@make aws-tag-staging
+	@make aws-push-staging
+
+### production
+aws-ecs-login-production:
+	aws ecr get-login-password --profile 794923683341_operation-administrator | docker login --username AWS --password-stdin 794923683341.dkr.ecr.ap-northeast-1.amazonaws.com
+aws-build-production:
+	docker build --platform linux/amd64 -t crmprod-tenmaya-ecs/nginx:latest --target deploy -f ./infra/docker/nginx/Dockerfile --build-arg APP_ENV=production .
+	docker build --platform linux/amd64 -t crmprod-tenmaya-ecs/php:latest --target deploy -f ./infra/docker/php/Dockerfile --build-arg APP_ENV=production .
+aws-tag-production:
+	docker tag crmprod-tenmaya-ecs/nginx:latest 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tenmaya-ecs/nginx:latest
+	docker tag crmprod-tenmaya-ecs/php:latest 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tenmaya-ecs/php:latest
+aws-push-production:
+	docker push 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tenmaya-ecs/nginx:latest --disable-content-trust=true
+	docker push 046325697959.dkr.ecr.ap-northeast-1.amazonaws.com/crmprod-tenmaya-ecs/php:latest --disable-content-trust=true
+aws-production:
+	@make aws-build-production
+	@make aws-tag-production
+	@make aws-push-production
