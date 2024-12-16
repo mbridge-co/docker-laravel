@@ -26,6 +26,8 @@ RUN <<EOF
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    libmemcached-tools \
+    libmemcached-dev \
     default-mysql-client
   locale-gen en_US.UTF-8
   localedef -f UTF-8 -i en_US en_US.UTF-8
@@ -44,7 +46,11 @@ RUN <<EOF
   chown phper:phper /home/phper/.config/psysh
   apt-get clean
   rm -rf /var/lib/apt/lists/*
+  pecl install memcached
+  docker-php-ext-enable memcached
 EOF
+
+COPY ./infra/docker/php/docker.conf /usr/local/etc/php-fpm.d/docker.conf
 
 FROM base AS development
 
@@ -59,6 +65,7 @@ RUN <<EOF
   docker-php-ext-enable xdebug
 EOF
 
+COPY ./infra/docker/php/php.development.ini /usr/local/etc/php/php.ini
 COPY ./infra/docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 USER phper
@@ -70,10 +77,12 @@ COPY --chown=phper:phper ./src /workspace
 
 USER phper
 
+ARG APP_ENV
+
 RUN <<EOF
   composer install --quiet --no-interaction --no-ansi --no-dev --no-scripts --no-progress --prefer-dist
   composer dump-autoload --optimize
   chmod -R 777 storage bootstrap/cache
   php artisan optimize:clear
-  php artisan optimize
+  php artisan optimize --env=$APP_ENV
 EOF

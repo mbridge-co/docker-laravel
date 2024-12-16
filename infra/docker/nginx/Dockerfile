@@ -8,6 +8,10 @@ FROM base AS development
 
 COPY ./infra/docker/nginx/default.development.conf /etc/nginx/conf.d/default.conf
 
+FROM base AS development-xdebug
+
+COPY ./infra/docker/nginx/default.development.conf /etc/nginx/conf.d/default.conf
+
 FROM base AS deploy
 
 COPY ./infra/docker/nginx/nginx.deploy.conf /etc/nginx/nginx.conf

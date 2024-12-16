@@ -18,11 +18,12 @@
 /src/phpspec.yml
 /src/npm-debug.log
 /src/yarn-error.log
+/.DS_Store
 /.github
 /.git
 /.idea
 /.vscode
-**.env*
+**.env
 **.editorconfig
 **.gitattributes
 **.gitignore
